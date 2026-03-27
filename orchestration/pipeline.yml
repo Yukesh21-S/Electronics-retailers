@@ -1,0 +1,29 @@
+resources:
+  jobs:
+    New_Job_Mar_26_2026_05_59_PM:
+      name: New Job Mar 26, 2026, 05:59 PM
+      trigger:
+        pause_status: UNPAUSED
+        periodic:
+          interval: 1
+          unit: DAYS
+      tasks:
+        - task_key: Data_Ingestion
+          notebook_task:
+            notebook_path: /Workspace/Users/sy3422658@gmail.com/Electronics-retailers/01_prod_bronze/bronze_nb
+            source: WORKSPACE
+        - task_key: Transformation
+          depends_on:
+            - task_key: Data_Ingestion
+          notebook_task:
+            notebook_path: /Workspace/Users/sy3422658@gmail.com/Electronics-retailers/02_prod_silver/silver_nb
+            source: WORKSPACE
+        - task_key: analytics
+          depends_on:
+            - task_key: Transformation
+          notebook_task:
+            notebook_path: /Workspace/Users/sy3422658@gmail.com/Electronics-retailers/03_prod_gold/gold_nb
+            source: WORKSPACE
+      queue:
+        enabled: true
+      performance_target: PERFORMANCE_OPTIMIZED
